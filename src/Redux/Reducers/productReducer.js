@@ -14,12 +14,12 @@ function getDate() {
     let year = date.getFullYear();
 
     if(day<10) {
-      return `${year}-${month}-${0}${day}`;
+      return `${0}${day}-${month}-${year}`;
     }
     if(month<10) {
-      return `${year}-${0}${month}-${day}`;
+        return `${day}-${0}${month}-${year}`;
     }
-    return `${year}-${month}-${day}`;
+    return `${day}-${month}-${year}`;
 }
 
 // Define the initial state of the product slice
@@ -78,7 +78,7 @@ export const updateCartInDatabase = createAsyncThunk(
 
         const userRef = doc(db, "buybusy", userLoggedIn.id);
         await updateDoc(userRef, {
-            cart: productReducer.cart
+            cart: productReducer.cart,
         });
     }
 )
@@ -204,15 +204,17 @@ export const purchaseAllThunk = createAsyncThunk(
         const { authReducer,productReducer} = thunkAPI.getState();
         const {userLoggedIn} = authReducer;
         
-        const currentDate=getDate();
+        const currentDate = getDate();
         
         const userRef = doc(db, "buybusy", userLoggedIn.id);
         await updateDoc(userRef, {
-            orders: arrayUnion({date:currentDate,
-                                list:productReducer.cart,
-                                amount:productReducer.total})
-            }
-        );
+            orders: arrayUnion({
+                date:currentDate,
+                list:productReducer.cart,
+                amount:productReducer.total,
+                discountedAmount: args,
+            }),
+        });
         
         thunkAPI.dispatch(clearCartThunk());
     }
@@ -253,7 +255,7 @@ const productSlice = createSlice({
         reduceTotalAmount: (state,action) => {
             state.total -= action.payload;
             return;
-        }
+        },
     },
     extraReducers: (builder) => {
 
@@ -311,6 +313,7 @@ export const {
     setCart,
     increaseTotalAmount,
     increaseTotalItem,
-    reduceTotalAmount } = productSlice.actions;
+    reduceTotalAmount,
+} = productSlice.actions;
 
 export const productSelector = (state) => state.productReducer;

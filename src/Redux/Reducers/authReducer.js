@@ -1,4 +1,5 @@
 // ********* Import necessary libraries and functions *********
+
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { db } from "../../firebaseInit";
 import { collection, addDoc, onSnapshot } from "firebase/firestore";
@@ -25,7 +26,6 @@ export const getInitialUserList = createAsyncThunk(
                     ...doc.data()
                 }
             });
-            console.log('users getInitialUserList', users)
             thunkAPI.dispatch(setUserList(users));
         })
     }

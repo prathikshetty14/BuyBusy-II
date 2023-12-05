@@ -15,8 +15,6 @@ export function MyOrder() {
 
   const { myorders } = useSelector(productSelector);
   const {userLoggedIn} = useSelector(authSelector);
-
-  console.log("userLoggedIn MyOrder", userLoggedIn)
   
   const [isLoading, setLoading] = useState(true);
   const dispatch = useDispatch();

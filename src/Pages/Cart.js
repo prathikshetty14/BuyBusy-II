@@ -8,7 +8,7 @@ import secondStyles from "../styles/cart.module.css";
 import { toast } from "react-toastify";
 
 import { authSelector, setLoggedIn, setUserLoggedIn } from "../Redux/Reducers/authReducer";
-import { clearCartThunk, productSelector, purchaseAllThunk, getInitialCartOrdersThunk } from "../Redux/Reducers/productReducer";
+import { clearCartThunk, productSelector, purchaseAllThunk, getInitialCartOrdersThunk, getInitialMyOrdersThunk } from "../Redux/Reducers/productReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -21,15 +21,18 @@ export function Cart() {
   // State for loading indicator
   const [isLoading, setLoading] = useState(true);
 
+  // State to manage discount
+  const [isDiscountApplied, setDiscountApplied] = useState(false);
+
   // Access relevant data and functions from contexts
-  const { cart, total, itemInCart } = useSelector(productSelector);
+  const { cart, total, itemInCart, myorders } = useSelector(productSelector);
   const {userLoggedIn} = useSelector(authSelector);
   const navigate = useNavigate();
 
   useEffect(() => {
   dispatch(getInitialCartOrdersThunk());
+  dispatch(getInitialMyOrdersThunk());
   },[userLoggedIn]);
-
 
   // Simulate loading for 300ms
   useEffect(() => {
@@ -49,7 +52,7 @@ export function Cart() {
 
 
   // Handle the purchase of all items in the cart
-  function handlePurchase() {
+  async function handlePurchase() {
     if (itemInCart === 0) {
       toast.error("Nothing to Purchase!");
       return;
@@ -57,14 +60,39 @@ export function Cart() {
 
     // Check if userLoggedIn is available
     if (userLoggedIn) {
-      dispatch(purchaseAllThunk());
+
+      // Determine the purchase amount based on discount
+      let purchaseAmount = 0;
+
+      if(isDiscountApplied === true){
+        purchaseAmount = (total * 0.9).toFixed(2);
+      }
+
+      await dispatch(purchaseAllThunk(purchaseAmount));
       toast.success("Order Purchased Successfully!");
+      
       navigate("/myorder");
     } else {
       toast.error("User not logged in. Please log in first.");
       navigate("/signin");
     }
   }
+
+  const handleApplyDiscount = () => {
+    setDiscountApplied((prev) => !prev)
+  }
+
+  // Conditionally render "Apply Discount" button
+  const renderDiscountButton = () => {
+    return (
+      myorders.length > 0 && myorders.length % 3 === 0 && (
+        <button onClick={handleApplyDiscount}>
+          {isDiscountApplied ? "Remove Discount" : "Apply Discount"}
+        </button>
+      )
+    )
+  }
+
 
   return (
     <>
@@ -99,7 +127,10 @@ export function Cart() {
               <div>
 
                 {/* Total Amount */}
-                Total Amount: ₹{total}
+                <span style={{ textDecoration: isDiscountApplied ? "line-through" : "none"}}>
+                  Total Amount: ₹{total}
+                </span> <br />
+                {isDiscountApplied && `Discounted: ₹${(total * 0.9).toFixed(2)}`}
 
                 <br />
 
@@ -110,6 +141,8 @@ export function Cart() {
                 >
                   Checkout
                 </button>
+
+                {renderDiscountButton()}
               </div>
             </div>
           </div>

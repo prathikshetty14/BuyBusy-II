@@ -1,10 +1,10 @@
-// Home.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import FilterBar from "../Component/Home/FilterBar";
 import MainContent from "../Component/Home/MainContent";
 import styles from "../styles/home.module.css";
 import Loader from "../Component/Loader/Loader";
 import { data } from "../Assets/data";
+import { toast } from "react-toastify";
 
 import {
   authSelector,
@@ -12,13 +12,15 @@ import {
   setLoggedIn,
   setUserLoggedIn,
 } from "../Redux/Reducers/authReducer";
-import { getInitialCartOrdersThunk } from "../Redux/Reducers/productReducer";
+import { getInitialCartOrdersThunk, productSelector } from "../Redux/Reducers/productReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 export function Home() {
   const dispatch = useDispatch();
 
   const { isLoggedIn, userLoggedIn } = useSelector(authSelector);
+
+  const {myorders} = useSelector(productSelector)
 
   const [isLoading, setLoading] = useState(true);
 
@@ -32,9 +34,37 @@ export function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6; // Adjust this based on your preference
 
+  const [couponToastShown, setCouponToastShown] = useState(false); // New state
+  const isMounted = useRef(true);
+
   useEffect(() => {
     dispatch(getInitialCartOrdersThunk());
   }, [userLoggedIn]);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+  
+  useEffect(() => {
+    if(isMounted.current && myorders.length > 0 && myorders.length % 3 === 0 && !couponToastShown){
+
+      toast('🦄 Wow you have a coupon waiting!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+
+      setCouponToastShown(true);
+    }
+  }, [couponToastShown])
+  
 
   // Update currentPage to 1 when the search term changes
   useEffect(() => {
