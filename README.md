@@ -1,5 +1,9 @@
 # ShopSwift E-Commerce
 
+## About the Project
+
+ShopSwift is an E-Commerce web application that allows users to browse available items, add or remove them from their shopping cart, and complete the purchasing process. It provides a seamless shopping experience for users. 
+
 ## Table of Contents
 - [About the Project](#about-the-project)
 - [Features](#features)
@@ -10,9 +14,6 @@
 - [Usage](#usage)
 - [Author](#author)
 
-## About the Project
-
-ShopSwift is an E-Commerce web application that allows users to browse available items, add or remove them from their shopping cart, and complete the purchasing process. It provides a seamless shopping experience for users.
 
 ## Features
 
@@ -25,6 +26,8 @@ ShopSwift is an E-Commerce web application that allows users to browse available
 7. Product Filtering: Users can filter products by price and category.
 8. Error Handling: The application provides informative error messages.
 9. User Feedback: Toast messages for async actions and error conditions.
+10. Pagination: Smooth Pagination provided at the bottom of the screen.
+11. Discount Applicable: After every 3rd order a 10% Discount is provided to the total amount.
 
 ## Tech Stack
 
