@@ -86,7 +86,10 @@ export function Cart() {
   const renderDiscountButton = () => {
     return (
       myorders.length > 0 && myorders.length % 3 === 0 && (
-        <button onClick={handleApplyDiscount}>
+        <button 
+        className={secondStyles.discountBtn}
+        onClick={handleApplyDiscount}
+        >
           {isDiscountApplied ? "Remove Discount" : "Apply Discount"}
         </button>
       )
@@ -129,12 +132,12 @@ export function Cart() {
                 {/* Total Amount */}
                 <span style={{ textDecoration: isDiscountApplied ? "line-through" : "none"}}>
                   Total Amount: ₹{total}
-                </span> <br />
-                {isDiscountApplied && `Discounted: ₹${(total * 0.9).toFixed(2)}`}
+                </span> 
+                {isDiscountApplied && (<span><br />Discounted: ₹ {(total * 0.9).toFixed(2)}</span>)}
 
                 <br />
 
-                {/* Purchase Button */}
+                {/* Purchase & Discount Button */}
                 <button
                   className={secondStyles.purchaseAll}
                   onClick={handlePurchase}
@@ -143,6 +146,7 @@ export function Cart() {
                 </button>
 
                 {renderDiscountButton()}
+                
               </div>
             </div>
           </div>
