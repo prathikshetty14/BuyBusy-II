@@ -6,6 +6,16 @@ import { db } from "../../firebaseInit";
 
 import { toast } from "react-toastify";
 
+// Define the initial state of the product slice
+const initialState = {
+    cart:[],
+    itemInCart:0,
+    myorders:[],
+    total:0,
+    discountCode: [],
+}
+
+
 // Function to get the current date
 function getDate() {
     const date = new Date();
@@ -22,13 +32,6 @@ function getDate() {
     return `${day}-${month}-${year}`;
 }
 
-// Define the initial state of the product slice
-const initialState = {
-    cart:[],
-    itemInCart:0,
-    myorders:[],
-    total:0,
-}
 
 // Create an async thunk to fetch the initial cart orders from the database
 export const getInitialCartOrdersThunk = createAsyncThunk(
@@ -130,7 +133,7 @@ export const addToCartThunk = createAsyncThunk(
             return window.location.href = "/signin";
         }
 
-        const index=productReducer.cart.findIndex((item) => item.name === product.name);
+        const index = productReducer.cart.findIndex((item) => item.name === product.name);
 
         if(index !== -1){
             thunkAPI.dispatch(increaseQuantThunk(productReducer.cart[index]));
@@ -209,16 +212,51 @@ export const purchaseAllThunk = createAsyncThunk(
         const userRef = doc(db, "buybusy", userLoggedIn.id);
         await updateDoc(userRef, {
             orders: arrayUnion({
+                id:Date.now().toString(),
                 date:currentDate,
                 list:productReducer.cart,
                 amount:productReducer.total,
                 discountedAmount: args,
             }),
         });
+
+        const {myorders} = thunkAPI.getState().productReducer;
+
+        if(myorders.length > 0 && myorders.length % 3 === 0){
+            await thunkAPI.dispatch(generateDiscountCodeThunk());
+        }
         
         thunkAPI.dispatch(clearCartThunk());
     }
 );
+
+
+export const generateDiscountCodeThunk = createAsyncThunk(
+    "product/generateDiscountCode",
+    async (args, thunkAPI) => {
+        // Generate a unique identifier (timestamp in this case)
+        const uniqueIdentifier = Date.now().toString();
+
+        // Your logic for generating a discount code
+        const discountCode = `DISCOUNT${uniqueIdentifier}`; // Replace this with your actual logic
+
+        // Dispatch the setDiscountCode action to store the discount code in the state
+        thunkAPI.dispatch(setDiscountCode(discountCode));
+
+        // Store the discount code in the user's database
+        const { authReducer } = thunkAPI.getState();
+        const { userLoggedIn } = authReducer;
+
+        const userRef = doc(db, "buybusy", userLoggedIn.id);
+        await updateDoc(userRef, {
+            discountCode: arrayUnion({discountCode}),
+        });
+
+        // Display a toast message
+        toast.success(`Discount code generated: ${discountCode}`);
+    }
+);
+  
 
 
 // Create a productSlice using createSlice
@@ -254,6 +292,10 @@ const productSlice = createSlice({
         },
         reduceTotalAmount: (state,action) => {
             state.total -= action.payload;
+            return;
+        },
+        setDiscountCode: (state, action) => {
+            state.discountCode = action.payload;
             return;
         },
     },
@@ -314,6 +356,7 @@ export const {
     increaseTotalAmount,
     increaseTotalItem,
     reduceTotalAmount,
+    setDiscountCode
 } = productSlice.actions;
 
 export const productSelector = (state) => state.productReducer;

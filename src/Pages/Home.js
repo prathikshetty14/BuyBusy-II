@@ -12,7 +12,7 @@ import {
   setLoggedIn,
   setUserLoggedIn,
 } from "../Redux/Reducers/authReducer";
-import { getInitialCartOrdersThunk, productSelector } from "../Redux/Reducers/productReducer";
+import { getInitialCartOrdersThunk, getInitialMyOrdersThunk, productSelector } from "../Redux/Reducers/productReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 export function Home() {
@@ -39,6 +39,7 @@ export function Home() {
 
   useEffect(() => {
     dispatch(getInitialCartOrdersThunk());
+    dispatch(getInitialMyOrdersThunk());
   }, [userLoggedIn]);
 
   useEffect(() => {

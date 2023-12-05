@@ -30,9 +30,10 @@ export function Cart() {
   const navigate = useNavigate();
 
   useEffect(() => {
-  dispatch(getInitialCartOrdersThunk());
-  dispatch(getInitialMyOrdersThunk());
+    dispatch(getInitialCartOrdersThunk());
+    dispatch(getInitialMyOrdersThunk());
   },[userLoggedIn]);
+  
 
   // Simulate loading for 300ms
   useEffect(() => {
@@ -95,7 +96,6 @@ export function Cart() {
       )
     )
   }
-
 
   return (
     <>
