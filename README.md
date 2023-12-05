@@ -51,7 +51,7 @@ Before you begin, ensure you have met the following requirements:
 
 1. Clone the repository to your local machine:
    ```
-   git clone [https://github.com/prathikshetty14/ShopSwift](https://github.com/prathikshetty14/ShopSwift)(https://github.com/prathikshetty14/ShopSwift)
+   git clone https://github.com/prathikshetty14/ShopSwift
    ```
    
 2. Navigate to the project directory:
