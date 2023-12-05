@@ -1,4 +1,4 @@
-# BusyBuy E-Commerce
+# ShopSwift E-Commerce
 
 ## Table of Contents
 - [About the Project](#about-the-project)
@@ -12,7 +12,7 @@
 
 ## About the Project
 
-BusyBuy is an E-Commerce web application that allows users to browse available items, add or remove them from their shopping cart, and complete the purchasing process. It provides a seamless shopping experience for users.
+ShopSwift is an E-Commerce web application that allows users to browse available items, add or remove them from their shopping cart, and complete the purchasing process. It provides a seamless shopping experience for users.
 
 ## Features
 
@@ -38,7 +38,7 @@ BusyBuy is an E-Commerce web application that allows users to browse available i
 
 ## Getting Started
 
-To get started with BusyBuy, you can follow these instructions:
+To get started with ShopSwift, you can follow these instructions:
 
 ## Prerequisites
 
@@ -51,12 +51,12 @@ Before you begin, ensure you have met the following requirements:
 
 1. Clone the repository to your local machine:
    ```
-   git clone [https://github.com/yourusername/busybuy.git](https://github.com/prathikshetty14/BuyBusy)https://github.com/prathikshetty14/BuyBusy)
+   git clone [https://github.com/prathikshetty14/ShopSwift](https://github.com/prathikshetty14/ShopSwift)(https://github.com/prathikshetty14/ShopSwift)
    ```
    
 2. Navigate to the project directory:
    ```
-   cd busybuy-main
+   cd ShopSwift-main
    ```
 
 3. Install the required dependencies:
