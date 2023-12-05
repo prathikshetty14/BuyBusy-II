@@ -49,7 +49,7 @@ export function Home() {
   }, []);
   
   useEffect(() => {
-    if(isMounted.current && myorders.length >= 0 && myorders.length % 3 === 0 && !couponToastShown){
+    if(isMounted.current && myorders.length >= 3 && myorders.length % 3 === 0 && !couponToastShown){
 
       toast('🦄 Wow you have a coupon waiting!', {
         position: "top-right",

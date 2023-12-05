@@ -87,7 +87,7 @@ export function Cart() {
   // Conditionally render "Apply Discount" button
   const renderDiscountButton = () => {
     return (
-      (myorders.length >= 0 && myorders.length % 3 === 0) && (
+      (myorders.length >= 3 && myorders.length % 3 === 0) && (
         <button 
         className={secondStyles.discountBtn}
         onClick={handleApplyDiscount}

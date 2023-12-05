@@ -218,7 +218,7 @@ export const purchaseAllThunk = createAsyncThunk(
         discountedAmount: args,
     };
 
-    if (productReducer.myorders.length >= 0 && productReducer.myorders.length % 3 === 0) {
+    if (productReducer.myorders.length >= 3 && productReducer.myorders.length % 3 === 0) {
         const discountCode = await thunkAPI.dispatch(generateDiscountCodeThunk());
         orderData = {
         ...orderData,
