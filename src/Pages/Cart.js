@@ -65,6 +65,7 @@ export function Cart() {
       // Determine the purchase amount based on discount
       let purchaseAmount = 0;
 
+
       if(isDiscountApplied === true){
         purchaseAmount = (total * 0.9).toFixed(2);
       }
@@ -86,7 +87,7 @@ export function Cart() {
   // Conditionally render "Apply Discount" button
   const renderDiscountButton = () => {
     return (
-      myorders.length > 0 && myorders.length % 3 === 0 && (
+      (myorders.length >= 3 && myorders.length % 3 === 0) && (
         <button 
         className={secondStyles.discountBtn}
         onClick={handleApplyDiscount}

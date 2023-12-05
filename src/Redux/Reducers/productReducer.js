@@ -200,37 +200,42 @@ export const clearCartThunk = createAsyncThunk(
 );
 
 // Create an async thunk to complete a purchase and update the user's order history  
+
 export const purchaseAllThunk = createAsyncThunk(
     "product/purchaseAllItems",
-    async (args,thunkAPI) => {
+    async (args, thunkAPI) => {
+    const { authReducer, productReducer } = thunkAPI.getState();
+    const { userLoggedIn } = authReducer;
 
-        const { authReducer,productReducer} = thunkAPI.getState();
-        const {userLoggedIn} = authReducer;
-        
-        const currentDate = getDate();
-        
-        const userRef = doc(db, "buybusy", userLoggedIn.id);
-        await updateDoc(userRef, {
-            orders: arrayUnion({
-                id:Date.now().toString(),
-                date:currentDate,
-                list:productReducer.cart,
-                amount:productReducer.total,
-                discountedAmount: args,
-            }),
-        });
+    const currentDate = getDate();
 
-        const {myorders} = thunkAPI.getState().productReducer;
+    const userRef = doc(db, "buybusy", userLoggedIn.id);
+    let orderData = {
+        id: Date.now().toString(),
+        date: currentDate,
+        list: productReducer.cart,
+        amount: productReducer.total,
+        discountedAmount: args,
+    };
 
-        if(myorders.length > 0 && myorders.length % 3 === 0){
-            await thunkAPI.dispatch(generateDiscountCodeThunk());
-        }
-        
-        thunkAPI.dispatch(clearCartThunk());
+    if (productReducer.myorders.length >= 3 && productReducer.myorders.length % 3 === 0) {
+        const discountCode = await thunkAPI.dispatch(generateDiscountCodeThunk());
+        orderData = {
+        ...orderData,
+        discountCode: discountCode.payload,
+        };
+    }
+
+    await updateDoc(userRef, {
+        orders: arrayUnion(orderData),
+    });
+
+    thunkAPI.dispatch(clearCartThunk());
     }
 );
 
 
+// Async to generate a Discount Code
 export const generateDiscountCodeThunk = createAsyncThunk(
     "product/generateDiscountCode",
     async (args, thunkAPI) => {
@@ -249,11 +254,10 @@ export const generateDiscountCodeThunk = createAsyncThunk(
 
         const userRef = doc(db, "buybusy", userLoggedIn.id);
         await updateDoc(userRef, {
-            discountCode: arrayUnion({discountCode}),
+            discountCode: arrayUnion(discountCode),
         });
 
-        // Display a toast message
-        toast.success(`Discount code generated: ${discountCode}`);
+        return discountCode;
     }
 );
   

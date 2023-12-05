@@ -2,7 +2,7 @@ import styles from "../../styles/myorder.module.css";
 
 export default function OrderDetail(props) {
   // order details from props
-  const { date, list, amount, discountedAmount } = props.order;
+  const { date, list, amount, discountedAmount, discountCode } = props.order;
 
   return (
     // Order Container
@@ -34,7 +34,10 @@ export default function OrderDetail(props) {
 
         {/* Last Row */}
         <tr>
-          <td colSpan={4}>Grand Total</td>
+          <td colSpan={4}>
+            Grand Total
+            {discountCode ? (<span> <br /> Discount Code: {discountCode}</span>) : null}
+          </td>
           {discountedAmount === 0 ? (
             <>
               <td>₹ {amount}</td>
